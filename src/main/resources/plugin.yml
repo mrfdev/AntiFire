@@ -1,0 +1,11 @@
+name: ${project.artifactId}
+version: ${project.version}
+main: com.mrfloris.antifire.pluginEvents
+api-version: 1.16
+prefix: ${project.name}
+load: STARTUP
+loadbefore: [ Multiverse-Core ]
+author: DefianceCoding
+authors: [The456gaming, mrfloris]
+description: 1MB Helper plugin for dealing with server wide anti fire events
+website: github.com/mrfdev/AntiFire
