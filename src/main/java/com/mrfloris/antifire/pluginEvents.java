@@ -30,8 +30,7 @@ public final class pluginEvents extends JavaPlugin implements Listener {
         e.setCancelled(true);
         Block block = e.getBlock();
         Block[] adjacentBlocks = {block.getRelative(BlockFace.UP), block.getRelative(BlockFace.DOWN), block.getRelative(BlockFace.NORTH), block.getRelative(BlockFace.SOUTH), block.getRelative(BlockFace.EAST), block.getRelative(BlockFace.WEST)};
-        for (int i = 0; i < adjacentBlocks.length; i++) {
-            Block adjacentBlock = adjacentBlocks[i];
+        for (Block adjacentBlock : adjacentBlocks) {
             if (adjacentBlock.getType() == Material.FIRE && adjacentBlock.getRelative(BlockFace.DOWN).getType() != Material.NETHERRACK) {
                 adjacentBlock.setType(Material.AIR);
             }
