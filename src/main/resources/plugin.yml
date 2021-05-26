@@ -7,5 +7,5 @@ load: STARTUP
 loadbefore: [ Multiverse-Core ]
 author: DefianceCoding
 authors: [The456gaming, mrfloris]
-description: 1MB Helper plugin for dealing with server wide anti fire events
+description: ${project.description}
 website: github.com/mrfdev/AntiFire

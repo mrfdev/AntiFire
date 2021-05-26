@@ -11,7 +11,7 @@
 
     <name>1MB AntiFire</name>
 
-    <description>1MB Helper plugin for dealing with server wide anti fire events</description>
+    <description>1MB Helper plugin for dealing with server-wide fire-damage events</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
