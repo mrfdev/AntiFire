@@ -1,6 +1,6 @@
 # 1MB AntiFire
 
-**This is a Helper plugin for the fire-damage events we want to have better control over on the 1MoreBlock.com Minecraft 1.16 Java server.**
+**This is a Helper plugin for the fire-damage events we want to have better control over on the 1MoreBlock.com Minecraft 1.17 Java server.**
 
 The purpose of this plugin is two-fold:
 
@@ -16,9 +16,11 @@ During the Minecraft 1.8 / 1.12.2 era I always noted issues with fire control, I
 
 ## Where we are now
 
-With Minecraft version 1.17 around the corner, I wanted to pick things up again for some projects. Including this one. I've updated it slightly, so it works _okay_ with 1.16.5, and the latest Spigot/Paper server engine. The next step is making it a bit more modern, follow the logic of its purpose a bit more. And prepping it for future features that I want to consider.
+With Minecraft version 1.17 out now, I wanted to pick things up again for some projects. Including this one. I've updated it slightly, so it works _okay_ with 1.16.5, and the latest Spigot/Paper server engine. The next step is making it a bit more modern, follow the logic of its purpose a bit more. And prepping it for future features that I want to consider.
 
 While it's great that it's API wasn't set, and is for java8, so it should work fine with java11/java16, etc. I kind of wanted to clean up the code, follow better logic, tweak some things, update it to java16, and make it specific for 1.16.5 so there's no start-up 'legacy material' warning, etc.
+
+A little update: We've got the 1.16.5 jar running for a while without issues and 1.17 is out now. Github is up to date again with an 1.17 update.
 
 ## Bugs / Suggestions
 
@@ -40,4 +42,4 @@ And an honorable mention for DefianceCoding for listening to my issue and throwi
 
 ## Version
 
-[Tested build](https://github.com/mrfdev/AntiFire/releases) Version 2.0.1, for Spigot / Paper 1.16.5. Last updated: May 2021.
+[Tested build](https://github.com/mrfdev/AntiFire/releases) Version 2.0.2, for Spigot / Paper 1.17. Last updated: June 2021.
