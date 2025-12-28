@@ -1,11 +1,11 @@
 name: ${project.artifactId}
 version: ${project.version}
 main: com.mrfloris.antifire.pluginEvents
-api-version: 1.17
+api-version: 1.21.11
 prefix: ${project.name}
 load: STARTUP
 loadbefore: [ Multiverse-Core ]
 author: DefianceCoding
-authors: [The456gaming, mrfloris]
+authors: [ The456gaming, mrfloris ]
 description: ${project.description}
 website: github.com/mrfdev/AntiFire
