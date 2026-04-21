@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'com.mrfloris'
-version = '2.0.4-023-j25-26.1.2'
+version = '2.0.5-024-j25-26.1.2'
 description = '1MB Helper plugin for dealing with server-wide fire-damage events'
 
 def pluginArtifactId = 'AntiFire'
@@ -44,4 +44,9 @@ tasks.processResources {
 
 tasks.jar {
     archiveFileName = "1MB-AntiFire-v${project.version}.jar"
+}
+
+tasks.wrapper {
+    gradleVersion = '9.4.1'
+    distributionType = org.gradle.api.tasks.wrapper.Wrapper.DistributionType.BIN
 }

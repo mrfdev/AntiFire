@@ -48,8 +48,8 @@ would include. We can at least read it and take it under consideration.
 
 ## Wishlist
 
-At the moment this works fine, but I can imagine in the (near) future we could add support for new 1.17 things and make
-sure everything is up to date. Maybe include some startup checks.
+At the moment this works fine, but future updates could add more PaperMC `26.1.2+` compatibility checks, extra startup
+safety checks, and additional quality-of-life controls for temporary fire behavior.
 
 ## Credits
 
@@ -62,6 +62,29 @@ sure everything is up to date. Maybe include some startup checks.
 - OpenAI for helping put the current README and Gradle build update together.
 
 ## Changelog
+
+### 2.0.5-024-j25-26.1.2
+
+Commit message:
+
+`Add configurable fire control, admin command, and Gradle wrapper for Paper 26.1.2+`
+
+Changes in this update:
+
+- Moved the plugin to a cleaner structure with separate plugin, listener, settings, and command classes.
+- Changed fire-event handling from `MONITOR` style behavior to `HIGHEST` priority cancellation so the plugin can act as
+  an actual protection layer instead of only observing.
+- Added `BlockSpreadEvent` handling as a second guard against fire spread.
+- Added lightweight tracked-fire extinguishing so temporary fire can show briefly and then clear without using a heavy
+  world scan.
+- Added a configurable `config.yml` with toggles for spread prevention, burn prevention, extinguish timing, and which
+  ignition sources should be auto-cleaned.
+- Added `/_antifire` admin commands for status, config reload, and in-game setting changes.
+- Added the `onembantifire.admin` permission node with `default: false`, so operators do not get command access unless
+  explicitly granted.
+- Added a startup status log so it is easier to confirm that the plugin loaded early and with the expected settings.
+- Added a Gradle Wrapper so builders can run `./gradlew build` from a fresh clone.
+- Bumped the release to `2.0.5-024-j25-26.1.2`.
 
 ### 2.0.4-023-j25-26.1.2
 
@@ -87,13 +110,21 @@ Changes in this update:
 
 Clone the project and run:
 
-`gradle build`
+`./gradlew build`
 
 The build does not use the local `servers/` folder. The jar is written to:
 
-`build/libs/1MB-AntiFire-v2.0.4-023-j25-26.1.2.jar`
+`build/libs/1MB-AntiFire-v2.0.5-024-j25-26.1.2.jar`
+
+## Commands
+
+- `/_antifire` shows the current config state.
+- `/_antifire reload` reloads the config from disk.
+- `/_antifire toggle <key> <value>` updates a config key in game and saves it.
+
+This command requires the `onembantifire.admin` permission node and is not granted to operators by default.
 
 ## Version
 
-[Tested build](https://github.com/mrfdev/AntiFire/releases) Version `2.0.4-023-j25-26.1.2`, targeting Paper
+[Tested build](https://github.com/mrfdev/AntiFire/releases) Version `2.0.5-024-j25-26.1.2`, targeting Paper
 1.21.11 and Paper 26.1.2. Last updated: April 2026.

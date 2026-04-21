@@ -1,0 +1,17 @@
+# Core protection rules.
+prevent-fire-spread: true
+prevent-block-burn: true
+
+# Temporary fire handling for grief, lightning, and other accidental ignition.
+extinguish-enabled: true
+extinguish-delay-ticks: 100
+check-interval-ticks: 20
+
+# Fire sources to track for delayed extinguish.
+track-player-placed-fire: true
+track-lightning-fire: true
+track-lava-fire: true
+track-other-ignite-fire: true
+
+# Console output on enable.
+startup-log: true
