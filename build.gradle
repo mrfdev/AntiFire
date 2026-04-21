@@ -1,0 +1,47 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.mrfloris'
+version = '2.0.4-023-j25-26.1.2'
+description = '1MB Helper plugin for dealing with server-wide fire-damage events'
+
+def pluginArtifactId = 'AntiFire'
+def pluginDisplayName = '1MB AntiFire'
+
+repositories {
+    maven {
+        url = 'https://repo.papermc.io/repository/maven-public/'
+    }
+}
+
+dependencies {
+    compileOnly 'io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 25
+}
+
+tasks.processResources {
+    filteringCharset = 'UTF-8'
+    inputs.property('pluginVersion', project.version)
+    filesMatching('plugin.yml') {
+        expand(project: [
+            artifactId : pluginArtifactId,
+            version    : project.version,
+            name       : pluginDisplayName,
+            description: project.description
+        ])
+    }
+}
+
+tasks.jar {
+    archiveFileName = "1MB-AntiFire-v${project.version}.jar"
+}
