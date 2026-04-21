@@ -1,7 +1,7 @@
 # 1MB AntiFire
 
 **This is a Helper plugin for the fire-damage events we want to have better control over on the 1MoreBlock.com Minecraft
-1.21.1 Java server.**
+Java server, targeting PaperMC 1.21.11 and Paper build 26.1.2.**
 
 The purpose of this plugin is two-fold:
 
@@ -24,17 +24,14 @@ names and work with 1.13+ again. This was version 1.x, contributions to make thi
 
 ## Where we are now
 
-With Minecraft version 1.17 out now, I wanted to pick things up again for some projects. Including this one. I've
-updated it slightly, so it works _okay_ with 1.16.5, and the latest Spigot/Paper server engine. The next step is making
-it a bit more modern, follow the logic of its purpose a bit more. And prepping it for future features that I want to
-consider.
+This project has been modernized again for current PaperMC development, with the active focus now on PaperMC `26.1.2+`.
+The current build targets Paper `1.21.11` and Paper build `26.1.2`, with a Java 25 toolchain and a clean Gradle build
+that works from a fresh clone of the repository.
 
-While it's great that it's API wasn't set, and is for java8, so it should work fine with java11/java16, etc. I kind of
-wanted to clean up the code, follow better logic, tweak some things, update it to java16, and make it specific for
-1.16.5 so there's no start-up 'legacy material' warning, etc.
-
-A little update: We've got the 1.16.5 jar running for a while without issues and 1.17 is out now. Github is up to date
-again with an 1.17 update.
+The goal for this stage is to keep the plugin small, dependable, and easy to maintain while preserving its original
+purpose: stop unwanted fire spread, prevent block burn damage, and let controlled fire on netherrack continue to work
+as expected. Future changes should continue to prioritize compatibility with newer PaperMC releases in the `26.1.2+`
+range.
 
 ## Bugs / Suggestions
 
@@ -60,9 +57,31 @@ sure everything is up to date. Maybe include some startup checks.
   version of this plugin.
 - [The456gamer](https://github.com/the456gamer) for the 1.16.x update work that helped move the project forward
   again after the material-name changes.
-- Greymagic27 for the update work for Minecraft / Paper 1.21.x.
-- mrfloris for the update to Paper 26.1.2, the Java 25 build, and ongoing maintenance.
+- [Greymagic27](https://github.com/Greymagic27) for the update work for Minecraft / Paper 1.21.x.
+- [mrfloris](https://github.com/mrfloris) for the update to Paper 26.1.2, the Java 25 build, and ongoing maintenance.
 - OpenAI for helping put the current README and Gradle build update together.
+
+## Changelog
+
+### 2.0.4-023-j25-26.1.2
+
+Commit message:
+
+`Modernize AntiFire for Paper 26.1.2+ with Java 25 Gradle build and README refresh`
+
+Changes in this update:
+
+- Added Gradle build support so a fresh clone can run `gradle build` and produce the plugin jar without depending on
+  the local `servers/` folder.
+- Updated the build and release version to `2.0.4-023-j25-26.1.2` and aligned the jar output name with the current
+  Paper / Java target.
+- Kept Maven metadata aligned with the new version and Java 25 release settings.
+- Updated `.gitignore` so `/servers/`, `.DS_Store`, Gradle output, and related local build files stay out of Git.
+- Refreshed the README introduction and status text to reflect support for PaperMC `1.21.11` and Paper build `26.1.2`,
+  with the active maintenance focus on `26.1.2+`.
+- Added and updated the credits section to preserve existing acknowledgements and include
+  [Greymagic27](https://github.com/Greymagic27), [mrfloris](https://github.com/mrfloris), and OpenAI.
+- Updated plugin metadata and packaged version information so the built jar reports the current release correctly.
 
 ## Build
 
