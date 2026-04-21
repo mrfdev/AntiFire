@@ -54,14 +54,27 @@ would include. We can at least read it and take it under consideration.
 At the moment this works fine, but I can imagine in the (near) future we could add support for new 1.17 things and make
 sure everything is up to date. Maybe include some startup checks.
 
-## Other contributions
+## Credits
 
-1.16.x Update contributions from [The456gamer](https://github.com/the456gamer) (thank you so much!)
+- [DefianceCoding](https://www.spigotmc.org/) for listening to the original issue and throwing together the starter
+  version of this plugin.
+- [The456gamer](https://github.com/the456gamer) for the 1.16.x update work that helped move the project forward
+  again after the material-name changes.
+- Greymagic27 for the update work for Minecraft / Paper 1.21.x.
+- mrfloris for the update to Paper 26.1.2, the Java 25 build, and ongoing maintenance.
+- OpenAI for helping put the current README and Gradle build update together.
 
-And an honorable mention for DefianceCoding for listening to my issue and throwing a starter version of this plugin
-together for me. I have left you in the plugin.yml as author out of respect of course.
+## Build
+
+Clone the project and run:
+
+`gradle build`
+
+The build does not use the local `servers/` folder. The jar is written to:
+
+`build/libs/1MB-AntiFire-v2.0.4-023-j25-26.1.2.jar`
 
 ## Version
 
-[Tested build](https://github.com/mrfdev/AntiFire/releases) Version 2.0.2, for Spigot / Paper 1.17. Last updated: June
-2021.
+[Tested build](https://github.com/mrfdev/AntiFire/releases) Version `2.0.4-023-j25-26.1.2`, targeting Paper
+1.21.11 and Paper 26.1.2. Last updated: April 2026.

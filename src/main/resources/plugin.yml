@@ -6,6 +6,6 @@ prefix: ${project.name}
 load: STARTUP
 loadbefore: [ Multiverse-Core ]
 author: DefianceCoding
-authors: [ The456gaming, mrfloris ]
+authors: [ The456gamer, Greymagic27, mrfloris ]
 description: ${project.description}
-website: github.com/mrfdev/AntiFire
+website: https://github.com/mrfdev/AntiFire
