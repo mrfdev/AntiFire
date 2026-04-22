@@ -9,11 +9,6 @@ author: DefianceCoding
 authors: [ The456gamer, Greymagic27, mrfloris ]
 description: ${project.description}
 website: https://github.com/mrfdev/AntiFire
-commands:
-  _antifire:
-    description: Shows and manages 1MB AntiFire configuration.
-    usage: /_antifire [status|reload|toggle <key> <value>]
-    permission: onembantifire.admin
 permissions:
   onembantifire.admin:
     description: Allows access to /_antifire for trusted AntiFire administrators.

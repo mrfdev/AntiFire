@@ -63,6 +63,83 @@ safety checks, and additional quality-of-life controls for temporary fire behavi
 
 ## Changelog
 
+### 2.0.5-030-j25-26.1.2
+
+Commit message:
+
+`Fix antifire subcommand tab completion`
+
+Changes in this update:
+
+- Fixed `/_antifire` tab completion so the first suggestion step now offers `debug`, `reload`, `toggle`, and `help`.
+- Kept partial matching for subcommands and toggle values so completions continue to narrow as you type.
+- Bumped the release to `2.0.5-030-j25-26.1.2`.
+
+### 2.0.5-029-j25-26.1.2
+
+Commit message:
+
+`Clarify antifire help output and permission details`
+
+Changes in this update:
+
+- Expanded `/_antifire help` so it now lists every admin command with a short description.
+- Added the `onembantifire.admin` permission note directly to the help output, while keeping console access available.
+- Updated the README command section so the permission requirement is documented more explicitly alongside the admin commands.
+- Bumped the release to `2.0.5-029-j25-26.1.2`.
+
+### 2.0.5-028-j25-26.1.2
+
+Commit message:
+
+`Rename antifire status to debug and make bare command show help`
+
+Changes in this update:
+
+- Replaced `/_antifire status` with `/_antifire debug` to match the naming used by the other 1MB plugins.
+- Changed bare `/_antifire` so it now defaults to the help output instead of dumping the current config.
+- Updated the command help, command usage text, and README examples to match the new admin flow.
+- Bumped the release to `2.0.5-028-j25-26.1.2`.
+
+### 2.0.5-027-j25-26.1.2
+
+Commit message:
+
+`Remove antifire alias and polish admin command output`
+
+Changes in this update:
+
+- Removed the plain `/antifire` alias so the plugin now exposes only `/_antifire` and its namespaced variant.
+- Improved `/_antifire status` with grouped sections for protection, temporary fire, tracked ignite sources, and logging.
+- Improved `/_antifire reload` and `/_antifire toggle` responses so they confirm what changed in a more admin-friendly way.
+- Added `/_antifire help` as a clearer built-in command summary.
+- Bumped the release to `2.0.5-027-j25-26.1.2`.
+
+### 2.0.5-026-j25-26.1.2
+
+Commit message:
+
+`Allow console access to AntiFire admin command while keeping player permission checks`
+
+Changes in this update:
+
+- Added an explicit `canUse(...)` check for the Paper `BasicCommand` so the server console can always use `/_antifire`.
+- Kept player access restricted to `onembantifire.admin`, so operators still do not get access by default.
+- Bumped the release to `2.0.5-026-j25-26.1.2`.
+
+### 2.0.5-025-j25-26.1.2
+
+Commit message:
+
+`Register AntiFire admin command with Paper BasicCommand API`
+
+Changes in this update:
+
+- Switched `/_antifire` from legacy `plugin.yml` command wiring to Paper's `registerCommand(...)` API in `onEnable()`.
+- Kept the same `onembantifire.admin` permission requirement while using Paper's command visibility and suggestion flow.
+- Added a startup log line confirming that `/_antifire` was registered.
+- Bumped the release to `2.0.5-025-j25-26.1.2`.
+
 ### 2.0.5-024-j25-26.1.2
 
 Commit message:
@@ -114,17 +191,19 @@ Clone the project and run:
 
 The build does not use the local `servers/` folder. The jar is written to:
 
-`build/libs/1MB-AntiFire-v2.0.5-024-j25-26.1.2.jar`
+`build/libs/1MB-AntiFire-v2.0.5-030-j25-26.1.2.jar`
 
 ## Commands
 
-- `/_antifire` shows the current config state.
+- `/_antifire` shows the admin command summary.
+- `/_antifire help` shows the admin command summary.
+- `/_antifire debug` shows the current config state and requires `onembantifire.admin` for players.
 - `/_antifire reload` reloads the config from disk.
 - `/_antifire toggle <key> <value>` updates a config key in game and saves it.
 
-This command requires the `onembantifire.admin` permission node and is not granted to operators by default.
+All `/_antifire` admin commands require the `onembantifire.admin` permission node for players, are not granted to operators by default, and remain available from console.
 
 ## Version
 
-[Tested build](https://github.com/mrfdev/AntiFire/releases) Version `2.0.5-024-j25-26.1.2`, targeting Paper
+[Tested build](https://github.com/mrfdev/AntiFire/releases) Version `2.0.5-030-j25-26.1.2`, targeting Paper
 1.21.11 and Paper 26.1.2. Last updated: April 2026.

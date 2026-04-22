@@ -1,14 +1,15 @@
 package com.mrfloris.antifire;
 
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -112,15 +113,14 @@ public final class AntiFirePlugin extends JavaPlugin {
     }
 
     private void registerAdminCommand() {
-        PluginCommand command = getCommand("_antifire");
-        if (command == null) {
-            getLogger().severe("The /_antifire command is missing from plugin.yml.");
-            return;
-        }
-
-        AntiFireAdminCommand handler = new AntiFireAdminCommand(this);
-        command.setExecutor(handler);
-        command.setTabCompleter(handler);
+        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
+            Set<String> labels = event.registrar().register(
+                    "_antifire",
+                    "Shows and manages 1MB AntiFire configuration.",
+                    new AntiFireAdminCommand(this)
+            );
+            getLogger().info("Registered AntiFire command labels: " + String.join(", ", labels));
+        });
     }
 
     private void restartExtinguishTask() {
