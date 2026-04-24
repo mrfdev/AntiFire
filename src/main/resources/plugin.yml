@@ -1,13 +1,13 @@
 name: 1MB-AntiFire
-version: ${project.version}
+version: ${version}
 main: com.mrfloris.antifire.AntiFirePlugin
 api-version: 1.21.11
-prefix: ${project.name}
+prefix: ${name}
 load: STARTUP
 loadbefore: [ Multiverse-Core, WorldGuard ]
 author: DefianceCoding
 authors: [ The456gamer, Greymagic27, mrfloris ]
-description: ${project.description}
+description: ${description}
 website: https://github.com/mrfdev/AntiFire
 permissions:
   onembantifire.admin:

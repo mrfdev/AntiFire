@@ -19,9 +19,11 @@ public final class AntiFirePlugin extends JavaPlugin {
     private final Map<FireKey, Long> trackedFire = new HashMap<>();
     private BukkitTask extinguishTask;
     private AntiFireSettings settings;
+    private BuildMetadata buildMetadata;
 
     @Override
     public void onEnable() {
+        buildMetadata = BuildMetadata.load(this);
         saveDefaultConfig();
         reloadAntiFireSettings();
 
@@ -30,6 +32,7 @@ public final class AntiFirePlugin extends JavaPlugin {
 
         if (settings.startupLog()) {
             getLogger().info("AntiFire is active in STARTUP mode.");
+            getLogger().info("Build: " + buildMetadata.summary());
             getLogger().info("Spread=" + settings.preventFireSpread()
                     + ", burn=" + settings.preventBlockBurn()
                     + ", extinguish=" + settings.extinguishEnabled()
@@ -63,6 +66,10 @@ public final class AntiFirePlugin extends JavaPlugin {
 
     AntiFireSettings getSettings() {
         return settings;
+    }
+
+    BuildMetadata getBuildMetadata() {
+        return buildMetadata;
     }
 
     void updateSetting(AntiFireSetting setting, Object value) {

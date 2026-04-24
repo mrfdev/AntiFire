@@ -3,11 +3,27 @@ plugins {
 }
 
 group = 'com.mrfloris'
-version = '2.0.5-030-j25-26.1.2'
+version = '2.0.5-033-j25-26.1.2'
 description = '1MB Helper plugin for dealing with server-wide fire-damage events'
 
 def pluginArtifactId = 'AntiFire'
 def pluginDisplayName = '1MB AntiFire'
+def paperCompileTarget = '26.1.2'
+def paperCompileDependency = '26.1.2.build.+'
+def pluginApiCompatibilityFloor = '1.21.11'
+def javaTarget = 25
+def resourceProperties = [
+        artifactId                 : pluginArtifactId,
+        version                    : project.version,
+        name                       : pluginDisplayName,
+        description                : project.description,
+        paperCompileTarget         : paperCompileTarget,
+        paperCompileDependency     : paperCompileDependency,
+        pluginApiCompatibilityFloor: pluginApiCompatibilityFloor,
+        javaTarget                 : javaTarget
+]
+def jarTask = tasks.named('jar')
+def jarFileNameProvider = jarTask.flatMap { it.archiveFileName }
 
 repositories {
     maven {
@@ -16,35 +32,47 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT'
+    compileOnly "io.papermc.paper:paper-api:${paperCompileDependency}"
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_25
-    targetCompatibility = JavaVersion.VERSION_25
+    sourceCompatibility = JavaVersion.toVersion(javaTarget)
+    targetCompatibility = JavaVersion.toVersion(javaTarget)
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    options.release = 25
+    options.release = javaTarget
+    options.compilerArgs.addAll(['-Xlint:deprecation', '-Xlint:removal'])
 }
 
 tasks.processResources {
     filteringCharset = 'UTF-8'
-    inputs.property('pluginVersion', project.version)
-    filesMatching('plugin.yml') {
-        expand(project: [
-            artifactId : pluginArtifactId,
-            version    : project.version,
-            name       : pluginDisplayName,
-            description: project.description
-        ])
+    inputs.properties(resourceProperties)
+    filesMatching(['plugin.yml', 'build-info.properties']) {
+        expand(resourceProperties)
     }
 }
 
 tasks.jar {
+    destinationDirectory = layout.projectDirectory.dir('libs')
     archiveFileName = "1MB-AntiFire-v${project.version}.jar"
 }
+
+tasks.register('printBuildConfig') {
+    dependsOn jarTask
+    doLast {
+        println "Build config:"
+        println "  jar: libs/${jarFileNameProvider.get()}"
+        println "  compile target: Paper API ${paperCompileTarget}"
+        println "  compile dependency: io.papermc.paper:paper-api:${paperCompileDependency}"
+        println "  plugin.yml api-version floor: ${pluginApiCompatibilityFloor}"
+        println "  Java target: ${javaTarget}"
+        println "  test runner: /Users/floris/Projects/Codex/servers/run-test-server"
+    }
+}
+
+tasks.build.finalizedBy(tasks.named('printBuildConfig'))
 
 tasks.wrapper {
     gradleVersion = '9.4.1'

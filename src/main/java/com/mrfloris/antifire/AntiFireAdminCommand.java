@@ -138,7 +138,13 @@ final class AntiFireAdminCommand implements BasicCommand {
 
     private void sendDebug(CommandSender sender) {
         AntiFireSettings settings = plugin.getSettings();
+        BuildMetadata buildMetadata = plugin.getBuildMetadata();
         sender.sendMessage("[1MB AntiFire] Debug view for " + plugin.getName() + " v" + plugin.getPluginMeta().getVersion());
+        sender.sendMessage("[1MB AntiFire] Build:");
+        sender.sendMessage("  Paper API compile target: " + buildMetadata.paperCompileTarget());
+        sender.sendMessage("  Paper API dependency: " + buildMetadata.paperCompileDependency());
+        sender.sendMessage("  plugin.yml api-version floor: " + buildMetadata.pluginApiCompatibilityFloor());
+        sender.sendMessage("  Java target: " + buildMetadata.javaTarget());
         sender.sendMessage("[1MB AntiFire] Protection:");
         sender.sendMessage("  fire spread: " + formatToggle(settings.preventFireSpread()));
         sender.sendMessage("  block burn: " + formatToggle(settings.preventBlockBurn()));

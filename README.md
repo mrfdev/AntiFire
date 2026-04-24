@@ -25,8 +25,8 @@ names and work with 1.13+ again. This was version 1.x, contributions to make thi
 ## Where we are now
 
 This project has been modernized again for current PaperMC development, with the active focus now on PaperMC `26.1.2+`.
-The current build targets Paper `1.21.11` and Paper build `26.1.2`, with a Java 25 toolchain and a clean Gradle build
-that works from a fresh clone of the repository.
+The current build compiles against the Paper API `26.1.2` line, declares `api-version: 1.21.11` in `plugin.yml`, and
+uses a Java 25 toolchain so the same jar can be tested on both Paper `1.21.11` and Paper `26.1.2`.
 
 The goal for this stage is to keep the plugin small, dependable, and easy to maintain while preserving its original
 purpose: stop unwanted fire spread, prevent block burn damage, and let controlled fire on netherrack continue to work
@@ -62,6 +62,47 @@ safety checks, and additional quality-of-life controls for temporary fire behavi
 - OpenAI for helping put the current README and Gradle build update together.
 
 ## Changelog
+
+### 2.0.5-033-j25-26.1.2
+
+Commit message:
+
+`Enable Gradle configuration cache by default`
+
+Changes in this update:
+
+- Fixed the custom `printBuildConfig` task so it no longer reaches into the Gradle task container at execution time.
+- Enabled Gradle configuration cache by default for this project after verifying that `build` works with `--configuration-cache`.
+- Kept plugin code and runtime behavior unchanged.
+- Bumped the release to `2.0.5-033-j25-26.1.2`.
+
+### 2.0.5-032-j25-26.1.2
+
+Commit message:
+
+`Modernize build metadata handling and enable deprecation lint`
+
+Changes in this update:
+
+- Checked the plugin code against the requested Bukkit/Paper deprecation patterns and found no remaining deprecated plugin metadata or YAML APIs in active use.
+- Fixed the Gradle resource-filtering deprecation by replacing execution-time `project` lookups with a plain resource properties map.
+- Enabled Java compiler deprecation and removal lint in the Gradle build so future deprecated Paper/Bukkit usage is surfaced earlier.
+- Kept the same Paper API compile target (`26.1.2`), plugin.yml compatibility floor (`1.21.11`), Java target (`25`), and plugin behavior.
+- Bumped the release to `2.0.5-032-j25-26.1.2`.
+
+### 2.0.5-031-j25-26.1.2
+
+Commit message:
+
+`Target Paper API 26.1.2 and move testing to the centralized runner`
+
+Changes in this update:
+
+- Switched the compile dependency to the Paper API `26.1.2` line while keeping `plugin.yml` at `api-version: 1.21.11`.
+- Moved jar output to repo-root `libs/` so released jars survive future clean builds instead of being wiped from `build/libs/`.
+- Added build metadata output in startup/debug so it is obvious which Paper API line the jar compiles against, which compatibility floor it declares, and that it targets Java 25.
+- Updated the project notes to use `/Users/floris/Projects/Codex/servers/run-test-server` instead of any repo-local `/servers/` setup.
+- Bumped the release to `2.0.5-031-j25-26.1.2`.
 
 ### 2.0.5-030-j25-26.1.2
 
@@ -191,7 +232,13 @@ Clone the project and run:
 
 The build does not use the local `servers/` folder. The jar is written to:
 
-`build/libs/1MB-AntiFire-v2.0.5-030-j25-26.1.2.jar`
+`libs/1MB-AntiFire-v2.0.5-033-j25-26.1.2.jar`
+
+When you want to test the plugin, use the centralized runner:
+
+`/Users/floris/Projects/Codex/servers/run-test-server --paper 1.21.11 --plugin libs/1MB-AntiFire-v2.0.5-033-j25-26.1.2.jar --foreground`
+
+`/Users/floris/Projects/Codex/servers/run-test-server --paper 26.1.2 --plugin libs/1MB-AntiFire-v2.0.5-033-j25-26.1.2.jar --foreground`
 
 ## Commands
 
@@ -205,5 +252,5 @@ All `/_antifire` admin commands require the `onembantifire.admin` permission nod
 
 ## Version
 
-[Tested build](https://github.com/mrfdev/AntiFire/releases) Version `2.0.5-030-j25-26.1.2`, targeting Paper
+[Tested build](https://github.com/mrfdev/AntiFire/releases) Version `2.0.5-033-j25-26.1.2`, targeting Paper
 1.21.11 and Paper 26.1.2. Last updated: April 2026.
