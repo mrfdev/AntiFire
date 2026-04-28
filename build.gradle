@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'com.mrfloris'
-version = '2.0.5-033-j25-26.1.2'
+version = '2.0.5-034-j25-26.1.2'
 description = '1MB Helper plugin for dealing with server-wide fire-damage events'
 
 def pluginArtifactId = 'AntiFire'

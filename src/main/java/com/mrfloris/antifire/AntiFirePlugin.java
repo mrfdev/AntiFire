@@ -10,8 +10,8 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -20,11 +20,12 @@ public final class AntiFirePlugin extends JavaPlugin {
     private BukkitTask extinguishTask;
     private AntiFireSettings settings;
     private BuildMetadata buildMetadata;
+    private AntiFireConfigManager configManager;
 
     @Override
     public void onEnable() {
         buildMetadata = BuildMetadata.load(this);
-        saveDefaultConfig();
+        configManager = new AntiFireConfigManager(this);
         reloadAntiFireSettings();
 
         getServer().getPluginManager().registerEvents(new AntiFireListener(this), this);
@@ -51,16 +52,8 @@ public final class AntiFirePlugin extends JavaPlugin {
     }
 
     void reloadAntiFireSettings() {
-        reloadConfig();
-
-        FileConfiguration configuration = getConfig();
-        for (AntiFireSetting setting : AntiFireSetting.values()) {
-            configuration.addDefault(setting.path(), setting.defaultValue());
-        }
-        configuration.options().copyDefaults(true);
-        saveConfig();
-
-        settings = AntiFireSettings.from(this);
+        configManager.load();
+        settings = AntiFireSettings.from(configManager.configuration());
         restartExtinguishTask();
     }
 
@@ -72,10 +65,14 @@ public final class AntiFirePlugin extends JavaPlugin {
         return buildMetadata;
     }
 
+    YamlConfiguration getConfiguration() {
+        return configManager.configuration();
+    }
+
     void updateSetting(AntiFireSetting setting, Object value) {
-        getConfig().set(setting.path(), value);
-        saveConfig();
-        reloadAntiFireSettings();
+        configManager.update(setting, value);
+        settings = AntiFireSettings.from(configManager.configuration());
+        restartExtinguishTask();
     }
 
     boolean shouldTrackIgniteCause(BlockIgniteEvent.IgniteCause cause) {

@@ -63,6 +63,20 @@ safety checks, and additional quality-of-life controls for temporary fire behavi
 
 ## Changelog
 
+### 2.0.5-034-j25-26.1.2
+
+Commit message:
+
+`Preserve config comments across create reload and command edits`
+
+Changes in this update:
+
+- Replaced the default `saveDefaultConfig()` plus `copyDefaults(true)` flow with a shared YAML config helper that loads with `loadFromString(...)`, keeps comment parsing enabled, and saves through `YamlConfiguration`.
+- Added clear per-setting comments for every `config.yml` key, including default values, safe value notes, and reload behavior.
+- Preserved admin-edited values while safely adding missing defaults and only filling in comments when they are missing.
+- Kept config file work synchronous because it only happens during lightweight startup, reload, and command-driven config edits.
+- Bumped the release to `2.0.5-034-j25-26.1.2`.
+
 ### 2.0.5-033-j25-26.1.2
 
 Commit message:
@@ -232,13 +246,13 @@ Clone the project and run:
 
 The build does not use the local `servers/` folder. The jar is written to:
 
-`libs/1MB-AntiFire-v2.0.5-033-j25-26.1.2.jar`
+`libs/1MB-AntiFire-v2.0.5-034-j25-26.1.2.jar`
 
 When you want to test the plugin, use the centralized runner:
 
-`/Users/floris/Projects/Codex/servers/run-test-server --paper 1.21.11 --plugin libs/1MB-AntiFire-v2.0.5-033-j25-26.1.2.jar --foreground`
+`/Users/floris/Projects/Codex/servers/run-test-server --paper 1.21.11 --plugin libs/1MB-AntiFire-v2.0.5-034-j25-26.1.2.jar --foreground`
 
-`/Users/floris/Projects/Codex/servers/run-test-server --paper 26.1.2 --plugin libs/1MB-AntiFire-v2.0.5-033-j25-26.1.2.jar --foreground`
+`/Users/floris/Projects/Codex/servers/run-test-server --paper 26.1.2 --plugin libs/1MB-AntiFire-v2.0.5-034-j25-26.1.2.jar --foreground`
 
 ## Commands
 
@@ -252,5 +266,5 @@ All `/_antifire` admin commands require the `onembantifire.admin` permission nod
 
 ## Version
 
-[Tested build](https://github.com/mrfdev/AntiFire/releases) Version `2.0.5-033-j25-26.1.2`, targeting Paper
+[Tested build](https://github.com/mrfdev/AntiFire/releases) Version `2.0.5-034-j25-26.1.2`, targeting Paper
 1.21.11 and Paper 26.1.2. Last updated: April 2026.

@@ -2,6 +2,7 @@ package com.mrfloris.antifire;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.bukkit.configuration.ConfigurationSection;
 
 final class AntiFireSettings {
     private final boolean preventFireSpread;
@@ -39,18 +40,18 @@ final class AntiFireSettings {
         this.startupLog = startupLog;
     }
 
-    static AntiFireSettings from(AntiFirePlugin plugin) {
+    static AntiFireSettings from(ConfigurationSection configuration) {
         return new AntiFireSettings(
-                AntiFireSetting.PREVENT_FIRE_SPREAD.readBoolean(plugin),
-                AntiFireSetting.PREVENT_BLOCK_BURN.readBoolean(plugin),
-                AntiFireSetting.EXTINGUISH_ENABLED.readBoolean(plugin),
-                AntiFireSetting.EXTINGUISH_DELAY_TICKS.readInt(plugin),
-                AntiFireSetting.CHECK_INTERVAL_TICKS.readInt(plugin),
-                AntiFireSetting.TRACK_PLAYER_PLACED_FIRE.readBoolean(plugin),
-                AntiFireSetting.TRACK_LIGHTNING_FIRE.readBoolean(plugin),
-                AntiFireSetting.TRACK_LAVA_FIRE.readBoolean(plugin),
-                AntiFireSetting.TRACK_OTHER_IGNITE_FIRE.readBoolean(plugin),
-                AntiFireSetting.STARTUP_LOG.readBoolean(plugin)
+                AntiFireSetting.PREVENT_FIRE_SPREAD.readBoolean(configuration),
+                AntiFireSetting.PREVENT_BLOCK_BURN.readBoolean(configuration),
+                AntiFireSetting.EXTINGUISH_ENABLED.readBoolean(configuration),
+                AntiFireSetting.EXTINGUISH_DELAY_TICKS.readInt(configuration),
+                AntiFireSetting.CHECK_INTERVAL_TICKS.readInt(configuration),
+                AntiFireSetting.TRACK_PLAYER_PLACED_FIRE.readBoolean(configuration),
+                AntiFireSetting.TRACK_LIGHTNING_FIRE.readBoolean(configuration),
+                AntiFireSetting.TRACK_LAVA_FIRE.readBoolean(configuration),
+                AntiFireSetting.TRACK_OTHER_IGNITE_FIRE.readBoolean(configuration),
+                AntiFireSetting.STARTUP_LOG.readBoolean(configuration)
         );
     }
 

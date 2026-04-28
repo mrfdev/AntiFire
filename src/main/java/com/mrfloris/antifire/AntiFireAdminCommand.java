@@ -64,10 +64,10 @@ final class AntiFireAdminCommand implements BasicCommand {
                 }
 
                 try {
-                    Object previousValue = setting.get().readValue(plugin);
+                    Object previousValue = setting.get().readValue(plugin.getConfiguration());
                     Object parsedValue = setting.get().parseValue(args[2]);
                     plugin.updateSetting(setting.get(), parsedValue);
-                    Object appliedValue = setting.get().readValue(plugin);
+                    Object appliedValue = setting.get().readValue(plugin.getConfiguration());
                     sender.sendMessage("[1MB AntiFire] Saved " + setting.get().path()
                             + " from " + formatValue(previousValue)
                             + " to " + formatValue(appliedValue) + ".");
