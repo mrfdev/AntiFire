@@ -52,6 +52,12 @@ track-lava-fire: true
 # Reload behavior: takes effect immediately after /_antifire reload or /_antifire toggle.
 track-other-ignite-fire: true
 
+# Allows soul fire on soul sand and soul soil to stay lit instead of being treated as temporary fire.
+# Default: false.
+# Safe values: true or false.
+# Reload behavior: takes effect immediately after /_antifire reload or /_antifire toggle. Turning it on immediately stops AntiFire from clearing existing soul fire on those bases.
+allow-permanent-soul-fire: false
+
 # Writes the AntiFire startup summary and build/config details to console during plugin enable.
 # Default: true.
 # Safe values: true or false.

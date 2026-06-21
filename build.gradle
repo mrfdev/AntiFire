@@ -3,24 +3,24 @@ plugins {
 }
 
 group = 'com.mrfloris'
-version = '2.0.5-034-j25-26.1.2'
+version = '2.0.5-035-j25-26.1.2'
 description = '1MB Helper plugin for dealing with server-wide fire-damage events'
 
 def pluginArtifactId = 'AntiFire'
 def pluginDisplayName = '1MB AntiFire'
 def paperCompileTarget = '26.1.2'
 def paperCompileDependency = '26.1.2.build.+'
-def pluginApiCompatibilityFloor = '1.21.11'
+def pluginApiVersion = '26.1.2'
 def javaTarget = 25
 def resourceProperties = [
-        artifactId                 : pluginArtifactId,
-        version                    : project.version,
-        name                       : pluginDisplayName,
-        description                : project.description,
-        paperCompileTarget         : paperCompileTarget,
-        paperCompileDependency     : paperCompileDependency,
-        pluginApiCompatibilityFloor: pluginApiCompatibilityFloor,
-        javaTarget                 : javaTarget
+        artifactId            : pluginArtifactId,
+        version               : project.version,
+        name                  : pluginDisplayName,
+        description           : project.description,
+        paperCompileTarget    : paperCompileTarget,
+        paperCompileDependency: paperCompileDependency,
+        pluginApiVersion      : pluginApiVersion,
+        javaTarget            : javaTarget
 ]
 def jarTask = tasks.named('jar')
 def jarFileNameProvider = jarTask.flatMap { it.archiveFileName }
@@ -66,7 +66,7 @@ tasks.register('printBuildConfig') {
         println "  jar: libs/${jarFileNameProvider.get()}"
         println "  compile target: Paper API ${paperCompileTarget}"
         println "  compile dependency: io.papermc.paper:paper-api:${paperCompileDependency}"
-        println "  plugin.yml api-version floor: ${pluginApiCompatibilityFloor}"
+        println "  plugin.yml api-version: ${pluginApiVersion}"
         println "  Java target: ${javaTarget}"
         println "  test runner: /Users/floris/Projects/Codex/servers/run-test-server"
     }

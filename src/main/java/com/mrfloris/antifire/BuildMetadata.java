@@ -8,7 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 record BuildMetadata(
         String paperCompileTarget,
         String paperCompileDependency,
-        String pluginApiCompatibilityFloor,
+        String pluginApiVersion,
         int javaTarget
 ) {
     static BuildMetadata load(JavaPlugin plugin) {
@@ -24,7 +24,10 @@ record BuildMetadata(
         return new BuildMetadata(
                 properties.getProperty("paper.compile.target", "unknown"),
                 properties.getProperty("paper.compile.dependency", "unknown"),
-                properties.getProperty("plugin.api.compatibility-floor", "unknown"),
+                properties.getProperty(
+                        "plugin.api.version",
+                        properties.getProperty("plugin.api.compatibility-floor", "unknown")
+                ),
                 parseJavaTarget(properties.getProperty("java.target", "0"))
         );
     }
@@ -32,7 +35,7 @@ record BuildMetadata(
     String summary() {
         return "Paper API " + paperCompileTarget
                 + " (" + paperCompileDependency + "), plugin.yml api-version "
-                + pluginApiCompatibilityFloor + ", Java " + javaTarget;
+                + pluginApiVersion + ", Java " + javaTarget;
     }
 
     private static int parseJavaTarget(String value) {

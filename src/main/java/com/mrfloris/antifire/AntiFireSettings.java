@@ -14,6 +14,7 @@ final class AntiFireSettings {
     private final boolean trackLightningFire;
     private final boolean trackLavaFire;
     private final boolean trackOtherIgniteFire;
+    private final boolean allowPermanentSoulFire;
     private final boolean startupLog;
 
     private AntiFireSettings(
@@ -26,6 +27,7 @@ final class AntiFireSettings {
             boolean trackLightningFire,
             boolean trackLavaFire,
             boolean trackOtherIgniteFire,
+            boolean allowPermanentSoulFire,
             boolean startupLog
     ) {
         this.preventFireSpread = preventFireSpread;
@@ -37,6 +39,7 @@ final class AntiFireSettings {
         this.trackLightningFire = trackLightningFire;
         this.trackLavaFire = trackLavaFire;
         this.trackOtherIgniteFire = trackOtherIgniteFire;
+        this.allowPermanentSoulFire = allowPermanentSoulFire;
         this.startupLog = startupLog;
     }
 
@@ -51,6 +54,7 @@ final class AntiFireSettings {
                 AntiFireSetting.TRACK_LIGHTNING_FIRE.readBoolean(configuration),
                 AntiFireSetting.TRACK_LAVA_FIRE.readBoolean(configuration),
                 AntiFireSetting.TRACK_OTHER_IGNITE_FIRE.readBoolean(configuration),
+                AntiFireSetting.ALLOW_PERMANENT_SOUL_FIRE.readBoolean(configuration),
                 AntiFireSetting.STARTUP_LOG.readBoolean(configuration)
         );
     }
@@ -91,6 +95,10 @@ final class AntiFireSettings {
         return trackOtherIgniteFire;
     }
 
+    boolean allowPermanentSoulFire() {
+        return allowPermanentSoulFire;
+    }
+
     boolean startupLog() {
         return startupLog;
     }
@@ -106,6 +114,7 @@ final class AntiFireSettings {
         values.put(AntiFireSetting.TRACK_LIGHTNING_FIRE.path(), trackLightningFire);
         values.put(AntiFireSetting.TRACK_LAVA_FIRE.path(), trackLavaFire);
         values.put(AntiFireSetting.TRACK_OTHER_IGNITE_FIRE.path(), trackOtherIgniteFire);
+        values.put(AntiFireSetting.ALLOW_PERMANENT_SOUL_FIRE.path(), allowPermanentSoulFire);
         values.put(AntiFireSetting.STARTUP_LOG.path(), startupLog);
         return values;
     }

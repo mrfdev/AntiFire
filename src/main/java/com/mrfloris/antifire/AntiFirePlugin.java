@@ -37,6 +37,7 @@ public final class AntiFirePlugin extends JavaPlugin {
             getLogger().info("Spread=" + settings.preventFireSpread()
                     + ", burn=" + settings.preventBlockBurn()
                     + ", extinguish=" + settings.extinguishEnabled()
+                    + ", permanentSoulFire=" + settings.allowPermanentSoulFire()
                     + ", delayTicks=" + settings.extinguishDelayTicks()
                     + ", checkIntervalTicks=" + settings.checkIntervalTicks());
         }
@@ -93,7 +94,7 @@ public final class AntiFirePlugin extends JavaPlugin {
             return;
         }
 
-        if (isPermanentFireBase(block.getRelative(BlockFace.DOWN).getType())) {
+        if (isPermanentFire(block)) {
             return;
         }
 
@@ -107,7 +108,7 @@ public final class AntiFirePlugin extends JavaPlugin {
                 continue;
             }
 
-            if (isPermanentFireBase(adjacentBlock.getRelative(BlockFace.DOWN).getType())) {
+            if (isPermanentFire(adjacentBlock)) {
                 continue;
             }
 
@@ -166,7 +167,7 @@ public final class AntiFirePlugin extends JavaPlugin {
                 continue;
             }
 
-            if (isPermanentFireBase(block.getRelative(BlockFace.DOWN).getType())) {
+            if (isPermanentFire(block)) {
                 iterator.remove();
                 continue;
             }
@@ -180,8 +181,19 @@ public final class AntiFirePlugin extends JavaPlugin {
         }
     }
 
-    private boolean isPermanentFireBase(Material material) {
-        return material == Material.NETHERRACK;
+    private boolean isPermanentFire(Block block) {
+        if (!isFireMaterial(block.getType())) {
+            return false;
+        }
+
+        Material baseMaterial = block.getRelative(BlockFace.DOWN).getType();
+        if (baseMaterial == Material.NETHERRACK) {
+            return true;
+        }
+
+        return settings.allowPermanentSoulFire()
+                && block.getType() == Material.SOUL_FIRE
+                && (baseMaterial == Material.SOUL_SAND || baseMaterial == Material.SOUL_SOIL);
     }
 
     private record FireKey(UUID worldId, int x, int y, int z) {

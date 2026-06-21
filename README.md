@@ -1,7 +1,7 @@
 # 1MB AntiFire
 
 **This is a Helper plugin for the fire-damage events we want to have better control over on the 1MoreBlock.com Minecraft
-Java server, targeting PaperMC 1.21.11 and Paper build 26.1.2.**
+Java server, targeting PaperMC 26.1.2 with compatibility testing on 26.2.**
 
 The purpose of this plugin is two-fold:
 
@@ -25,13 +25,16 @@ names and work with 1.13+ again. This was version 1.x, contributions to make thi
 ## Where we are now
 
 This project has been modernized again for current PaperMC development, with the active focus now on PaperMC `26.1.2+`.
-The current build compiles against the Paper API `26.1.2` line, declares `api-version: 1.21.11` in `plugin.yml`, and
-uses a Java 25 toolchain so the same jar can be tested on both Paper `1.21.11` and Paper `26.1.2`.
+The current build compiles against the Paper API `26.1.2` line, declares `api-version: 26.1.2` in `plugin.yml`, and
+uses a Java 25 toolchain. The supported live target is Paper `26.1.2`, while Paper `26.2` is treated as a compatibility
+smoke-test target instead of a separate build target. Production servers can run newer Java runtimes such as Java
+`26.0.1`, but this plugin intentionally compiles for Java `25` because that is the Paper/Mojang baseline for the `26.x`
+generation.
 
 The goal for this stage is to keep the plugin small, dependable, and easy to maintain while preserving its original
 purpose: stop unwanted fire spread, prevent block burn damage, and let controlled fire on netherrack continue to work
-as expected. Future changes should continue to prioritize compatibility with newer PaperMC releases in the `26.1.2+`
-range.
+as expected. The plugin can also optionally allow soul fire on soul sand and soul soil to remain lit without a restart.
+Future changes should continue to prioritize compatibility with newer PaperMC releases in the `26.1.2+` range.
 
 ## Bugs / Suggestions
 
@@ -62,6 +65,22 @@ safety checks, and additional quality-of-life controls for temporary fire behavi
 - OpenAI for helping put the current README and Gradle build update together.
 
 ## Changelog
+
+### 2.0.5-035-j25-26.1.2
+
+Commit message:
+
+`Style antifire admin output and focus support on Paper 26.1.2+`
+
+Changes in this update:
+
+- Reworked `/_antifire` help, debug, reload, error, and toggle responses to use MiniMessage with the soft pastel 1MB-style presentation used in the other plugin projects.
+- Added the new `allow-permanent-soul-fire` config key so soul fire on soul sand and soul soil can be allowed live without a restart.
+- Added the live admin toggle example `/_antifire toggle allow-permanent-soul-fire true` to command output and docs.
+- Dropped the old Paper `1.21.11` support target from current metadata and docs, and changed `plugin.yml` to declare `api-version: 26.1.2`.
+- Kept the compile target on Paper API `26.1.2` while treating Paper `26.2` as compatibility coverage.
+- Synced the main README with the current runtime target, command list, command examples, permissions, toggle keys, and placeholder support notes.
+- Bumped the release to `2.0.5-035-j25-26.1.2`.
 
 ### 2.0.5-034-j25-26.1.2
 
@@ -238,6 +257,17 @@ Changes in this update:
   [Greymagic27](https://github.com/Greymagic27), [mrfloris](https://github.com/mrfloris), and OpenAI.
 - Updated plugin metadata and packaged version information so the built jar reports the current release correctly.
 
+## Runtime And Compatibility
+
+- Compile target: Paper API `26.1.2`
+- Declared `plugin.yml` `api-version`: `26.1.2`
+- Java compilation target: `25`
+- Intended live target: Paper `26.1.2`
+- Compatibility smoke-test target: Paper `26.2`
+- Expected runtime: Java `25+` with successful local testing on Java `26.0.1`
+- Startup behavior: `load: STARTUP`
+- Early-load hint: `loadbefore: [ Multiverse-Core, WorldGuard ]`
+
 ## Build
 
 Clone the project and run:
@@ -246,25 +276,63 @@ Clone the project and run:
 
 The build does not use the local `servers/` folder. The jar is written to:
 
-`libs/1MB-AntiFire-v2.0.5-034-j25-26.1.2.jar`
+`libs/1MB-AntiFire-v2.0.5-035-j25-26.1.2.jar`
 
 When you want to test the plugin, use the centralized runner:
 
-`/Users/floris/Projects/Codex/servers/run-test-server --paper 1.21.11 --plugin libs/1MB-AntiFire-v2.0.5-034-j25-26.1.2.jar --foreground`
+`/Users/floris/Projects/Codex/servers/run-test-server --paper 26.1.2 --plugin libs/1MB-AntiFire-v2.0.5-035-j25-26.1.2.jar --foreground`
 
-`/Users/floris/Projects/Codex/servers/run-test-server --paper 26.1.2 --plugin libs/1MB-AntiFire-v2.0.5-034-j25-26.1.2.jar --foreground`
+`/Users/floris/Projects/Codex/servers/run-test-server --paper 26.2 --plugin libs/1MB-AntiFire-v2.0.5-035-j25-26.1.2.jar --foreground`
 
 ## Commands
 
-- `/_antifire` shows the admin command summary.
-- `/_antifire help` shows the admin command summary.
-- `/_antifire debug` shows the current config state and requires `onembantifire.admin` for players.
-- `/_antifire reload` reloads the config from disk.
-- `/_antifire toggle <key> <value>` updates a config key in game and saves it.
+- `/_antifire` shows the admin help summary.
+- `/_antifire help` shows the admin help summary.
+- `/_antifire debug` shows build metadata, active protection settings, and permanent-fire exceptions.
+- `/_antifire reload` reloads `config.yml` from disk and applies it immediately.
+- `/_antifire toggle <key> <value>` updates one config key in game and saves it immediately.
 
-All `/_antifire` admin commands require the `onembantifire.admin` permission node for players, are not granted to operators by default, and remain available from console.
+## Command Examples
+
+- `/_antifire`
+- `/_antifire help`
+- `/_antifire debug`
+- `/_antifire reload`
+- `/_antifire toggle allow-permanent-soul-fire true`
+- `/_antifire toggle allow-permanent-soul-fire false`
+- `/_antifire toggle extinguish-delay-ticks 60`
+- `/_antifire toggle check-interval-ticks 20`
+- `/_antifire toggle startup-log false`
+
+## Toggle Keys
+
+- `prevent-fire-spread` stops natural fire spread from igniting nearby blocks.
+- `prevent-block-burn` prevents burning blocks from being destroyed by fire.
+- `extinguish-enabled` turns delayed cleanup of tracked temporary fire on or off.
+- `extinguish-delay-ticks` sets how long tracked temporary fire stays visible before cleanup.
+- `check-interval-ticks` sets how often AntiFire checks tracked fire for expiry.
+- `track-player-placed-fire` tracks player-placed fire for delayed cleanup.
+- `track-lightning-fire` tracks lightning-caused fire for delayed cleanup.
+- `track-lava-fire` tracks lava-caused fire for delayed cleanup.
+- `track-other-ignite-fire` tracks flint-and-steel and similar ignite causes for delayed cleanup.
+- `allow-permanent-soul-fire` lets soul fire on soul sand and soul soil stay lit.
+- `startup-log` controls the startup summary logging during plugin enable.
+
+For boolean keys, valid values include `true` and `false`. For tick-based keys, use whole numbers.
+
+## Permissions
+
+- `onembantifire.admin`: required for player use of every `/_antifire` command.
+- `default: false`: operators do not receive this automatically.
+- Console access is always allowed.
+- Grant the permission explicitly through LuckPerms or another permission plugin for trusted admins only.
+
+## Placeholders
+
+This plugin does not currently provide any PlaceholderAPI expansion or custom placeholders.
+There are no `%placeholder%` tokens or MiniMessage placeholder hooks to configure at this time.
 
 ## Version
 
-[Tested build](https://github.com/mrfdev/AntiFire/releases) Version `2.0.5-034-j25-26.1.2`, targeting Paper
-1.21.11 and Paper 26.1.2. Last updated: April 2026.
+[Tested build](https://github.com/mrfdev/AntiFire/releases) Version `2.0.5-035-j25-26.1.2`, targeting Paper
+26.1.2 with compatibility coverage on Paper 26.2. Last updated: June 2026.

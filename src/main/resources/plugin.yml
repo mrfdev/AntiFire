@@ -1,7 +1,7 @@
 name: 1MB-AntiFire
 version: ${version}
 main: com.mrfloris.antifire.AntiFirePlugin
-api-version: 1.21.11
+api-version: 26.1.2
 prefix: ${name}
 load: STARTUP
 loadbefore: [ Multiverse-Core, WorldGuard ]

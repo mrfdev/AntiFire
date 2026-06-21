@@ -107,6 +107,17 @@ enum AntiFireSetting {
                     "Reload behavior: takes effect immediately after /_antifire reload or /_antifire toggle."
             )
     ),
+    ALLOW_PERMANENT_SOUL_FIRE(
+            "allow-permanent-soul-fire",
+            ValueType.BOOLEAN,
+            false,
+            List.of(
+                    "Allows soul fire on soul sand and soul soil to stay lit instead of being treated as temporary fire.",
+                    "Default: false.",
+                    "Safe values: true or false.",
+                    "Reload behavior: takes effect immediately after /_antifire reload or /_antifire toggle. Turning it on immediately stops AntiFire from clearing existing soul fire on those bases."
+            )
+    ),
     STARTUP_LOG(
             "startup-log",
             ValueType.BOOLEAN,
@@ -172,9 +183,29 @@ enum AntiFireSetting {
     }
 
     static String availableKeys() {
+        return String.join(", ", paths());
+    }
+
+    static List<String> paths() {
         return Arrays.stream(values())
                 .map(AntiFireSetting::path)
-                .collect(Collectors.joining(", "));
+                .collect(Collectors.toList());
+    }
+
+    String shortDescription() {
+        return switch (this) {
+            case PREVENT_FIRE_SPREAD -> "Stop natural fire spread from igniting nearby blocks.";
+            case PREVENT_BLOCK_BURN -> "Prevent burning blocks from being destroyed.";
+            case EXTINGUISH_ENABLED -> "Turn delayed temporary-fire cleanup on or off.";
+            case EXTINGUISH_DELAY_TICKS -> "Set how long tracked temporary fire stays visible.";
+            case CHECK_INTERVAL_TICKS -> "Set how often tracked fire expiry is checked.";
+            case TRACK_PLAYER_PLACED_FIRE -> "Track player-created fire for delayed cleanup.";
+            case TRACK_LIGHTNING_FIRE -> "Track lightning-caused fire for delayed cleanup.";
+            case TRACK_LAVA_FIRE -> "Track lava-caused fire for delayed cleanup.";
+            case TRACK_OTHER_IGNITE_FIRE -> "Track flint-and-steel and other ignite causes.";
+            case ALLOW_PERMANENT_SOUL_FIRE -> "Keep soul fire on soul sand and soul soil lit.";
+            case STARTUP_LOG -> "Write startup build and config details to console.";
+        };
     }
 
     private static boolean parseBoolean(String rawValue) {

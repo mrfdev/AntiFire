@@ -5,7 +5,6 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.bukkit.command.CommandSender;
@@ -43,23 +42,25 @@ final class AntiFireAdminCommand implements BasicCommand {
             }
             case "reload" -> {
                 plugin.reloadAntiFireSettings();
-                sender.sendMessage("[1MB AntiFire] Reloaded config.yml from disk.");
-                sender.sendMessage("[1MB AntiFire] Spread protection is " + formatToggle(plugin.getSettings().preventFireSpread())
-                        + ", block burn protection is " + formatToggle(plugin.getSettings().preventBlockBurn())
-                        + ", and auto-extinguish is " + formatToggle(plugin.getSettings().extinguishEnabled()) + ".");
+                AntiFireSettings settings = plugin.getSettings();
+                AntiFireMessageStyle.success(sender, "Reloaded config.yml from disk.");
+                AntiFireMessageStyle.state(sender, "fire spread", settings.preventFireSpread());
+                AntiFireMessageStyle.state(sender, "block burn", settings.preventBlockBurn());
+                AntiFireMessageStyle.state(sender, "auto extinguish", settings.extinguishEnabled());
+                AntiFireMessageStyle.state(sender, "permanent soul fire", settings.allowPermanentSoulFire());
                 return;
             }
             case "toggle" -> {
                 if (args.length < 3) {
-                    sender.sendMessage("[1MB AntiFire] Usage: /_antifire toggle <key> <value>");
-                    sender.sendMessage("[1MB AntiFire] Keys: " + AntiFireSetting.availableKeys());
+                    AntiFireMessageStyle.error(sender, "Usage: /_antifire toggle <key> <value>");
+                    sendKeyHelp(sender);
                     return;
                 }
 
                 Optional<AntiFireSetting> setting = AntiFireSetting.fromPath(args[1]);
                 if (setting.isEmpty()) {
-                    sender.sendMessage("[1MB AntiFire] Unknown key: " + args[1]);
-                    sender.sendMessage("[1MB AntiFire] Keys: " + AntiFireSetting.availableKeys());
+                    AntiFireMessageStyle.error(sender, "Unknown key: " + args[1]);
+                    sendKeyHelp(sender);
                     return;
                 }
 
@@ -68,17 +69,18 @@ final class AntiFireAdminCommand implements BasicCommand {
                     Object parsedValue = setting.get().parseValue(args[2]);
                     plugin.updateSetting(setting.get(), parsedValue);
                     Object appliedValue = setting.get().readValue(plugin.getConfiguration());
-                    sender.sendMessage("[1MB AntiFire] Saved " + setting.get().path()
-                            + " from " + formatValue(previousValue)
-                            + " to " + formatValue(appliedValue) + ".");
+                    AntiFireMessageStyle.success(sender, "Saved " + setting.get().path() + ".");
+                    sendValueDetail(sender, "from", previousValue);
+                    sendValueDetail(sender, "to", appliedValue);
+                    AntiFireMessageStyle.detail(sender, "takes effect", "immediately");
                 } catch (IllegalArgumentException exception) {
-                    sender.sendMessage("[1MB AntiFire] " + exception.getMessage());
+                    AntiFireMessageStyle.error(sender, exception.getMessage());
                 }
                 return;
             }
             default -> {
-                sender.sendMessage("[1MB AntiFire] Unknown subcommand. Try " + COMMAND_USAGE);
-                sender.sendMessage("[1MB AntiFire] Keys: " + AntiFireSetting.availableKeys());
+                AntiFireMessageStyle.error(sender, "Unknown subcommand. Try " + COMMAND_USAGE);
+                sendKeyHelp(sender);
             }
         }
     }
@@ -97,21 +99,7 @@ final class AntiFireAdminCommand implements BasicCommand {
         }
 
         if (args.length == 2 && args[0].equalsIgnoreCase("toggle")) {
-            return filterMatches(
-                    args[1],
-                    List.of(
-                            AntiFireSetting.PREVENT_FIRE_SPREAD.path(),
-                            AntiFireSetting.PREVENT_BLOCK_BURN.path(),
-                            AntiFireSetting.EXTINGUISH_ENABLED.path(),
-                            AntiFireSetting.EXTINGUISH_DELAY_TICKS.path(),
-                            AntiFireSetting.CHECK_INTERVAL_TICKS.path(),
-                            AntiFireSetting.TRACK_PLAYER_PLACED_FIRE.path(),
-                            AntiFireSetting.TRACK_LIGHTNING_FIRE.path(),
-                            AntiFireSetting.TRACK_LAVA_FIRE.path(),
-                            AntiFireSetting.TRACK_OTHER_IGNITE_FIRE.path(),
-                            AntiFireSetting.STARTUP_LOG.path()
-                    )
-            );
+            return filterMatches(args[1], AntiFireSetting.paths());
         }
 
         if (args.length == 3 && args[0].equalsIgnoreCase("toggle")) {
@@ -139,38 +127,52 @@ final class AntiFireAdminCommand implements BasicCommand {
     private void sendDebug(CommandSender sender) {
         AntiFireSettings settings = plugin.getSettings();
         BuildMetadata buildMetadata = plugin.getBuildMetadata();
-        sender.sendMessage("[1MB AntiFire] Debug view for " + plugin.getName() + " v" + plugin.getPluginMeta().getVersion());
-        sender.sendMessage("[1MB AntiFire] Build:");
-        sender.sendMessage("  Paper API compile target: " + buildMetadata.paperCompileTarget());
-        sender.sendMessage("  Paper API dependency: " + buildMetadata.paperCompileDependency());
-        sender.sendMessage("  plugin.yml api-version floor: " + buildMetadata.pluginApiCompatibilityFloor());
-        sender.sendMessage("  Java target: " + buildMetadata.javaTarget());
-        sender.sendMessage("[1MB AntiFire] Protection:");
-        sender.sendMessage("  fire spread: " + formatToggle(settings.preventFireSpread()));
-        sender.sendMessage("  block burn: " + formatToggle(settings.preventBlockBurn()));
-        sender.sendMessage("[1MB AntiFire] Temporary fire:");
-        sender.sendMessage("  auto extinguish: " + formatToggle(settings.extinguishEnabled()));
-        sender.sendMessage("  extinguish delay: " + formatTicks(settings.extinguishDelayTicks()));
-        sender.sendMessage("  check interval: " + formatTicks(settings.checkIntervalTicks()));
-        sender.sendMessage("[1MB AntiFire] Tracked ignite sources:");
-        sender.sendMessage("  player placed fire: " + formatToggle(settings.trackPlayerPlacedFire()));
-        sender.sendMessage("  lightning fire: " + formatToggle(settings.trackLightningFire()));
-        sender.sendMessage("  lava fire: " + formatToggle(settings.trackLavaFire()));
-        sender.sendMessage("  other ignite fire: " + formatToggle(settings.trackOtherIgniteFire()));
-        sender.sendMessage("[1MB AntiFire] Logging:");
-        sender.sendMessage("  startup log: " + formatToggle(settings.startupLog()));
-        sender.sendMessage("[1MB AntiFire] Command: " + COMMAND_USAGE);
+        AntiFireMessageStyle.header(sender, "Debug");
+        AntiFireMessageStyle.note(sender, "Live runtime view for " + plugin.getName() + " v" + plugin.getPluginMeta().getVersion() + ".");
+        AntiFireMessageStyle.itemStrong(sender, "Build");
+        AntiFireMessageStyle.detail(sender, "Paper API compile target", buildMetadata.paperCompileTarget());
+        AntiFireMessageStyle.detail(sender, "Paper API dependency", buildMetadata.paperCompileDependency());
+        AntiFireMessageStyle.detail(sender, "plugin.yml api-version", buildMetadata.pluginApiVersion());
+        AntiFireMessageStyle.detail(sender, "Java target", buildMetadata.javaTarget());
+        AntiFireMessageStyle.itemStrong(sender, "Protection");
+        AntiFireMessageStyle.state(sender, "fire spread", settings.preventFireSpread());
+        AntiFireMessageStyle.state(sender, "block burn", settings.preventBlockBurn());
+        AntiFireMessageStyle.itemStrong(sender, "Temporary fire");
+        AntiFireMessageStyle.state(sender, "auto extinguish", settings.extinguishEnabled());
+        AntiFireMessageStyle.detail(sender, "extinguish delay", formatTicks(settings.extinguishDelayTicks()));
+        AntiFireMessageStyle.detail(sender, "check interval", formatTicks(settings.checkIntervalTicks()));
+        AntiFireMessageStyle.itemStrong(sender, "Permanent fire");
+        AntiFireMessageStyle.state(sender, "netherrack", true);
+        AntiFireMessageStyle.state(sender, "soul sand / soul soil soul fire", settings.allowPermanentSoulFire());
+        AntiFireMessageStyle.itemStrong(sender, "Ignite tracking");
+        AntiFireMessageStyle.state(sender, "player placed fire", settings.trackPlayerPlacedFire());
+        AntiFireMessageStyle.state(sender, "lightning fire", settings.trackLightningFire());
+        AntiFireMessageStyle.state(sender, "lava fire", settings.trackLavaFire());
+        AntiFireMessageStyle.state(sender, "other ignite fire", settings.trackOtherIgniteFire());
+        AntiFireMessageStyle.itemStrong(sender, "Admin");
+        AntiFireMessageStyle.detail(sender, "command", COMMAND_USAGE);
+        AntiFireMessageStyle.detail(sender, "permission", ADMIN_PERMISSION + " (console always allowed)");
+        AntiFireMessageStyle.itemStrong(sender, "Quick toggle");
+        AntiFireMessageStyle.detail(sender, "enable soul fire", "/_antifire toggle allow-permanent-soul-fire true");
     }
 
     private void sendHelp(CommandSender sender) {
-        sender.sendMessage("[1MB AntiFire] Commands:");
-        sender.sendMessage("  /_antifire - shows this help summary");
-        sender.sendMessage("  /_antifire help - shows this help summary");
-        sender.sendMessage("  /_antifire debug - shows the current config state");
-        sender.sendMessage("  /_antifire reload - reloads config.yml from disk");
-        sender.sendMessage("  /_antifire toggle <key> <value> - updates and saves a config key");
-        sender.sendMessage("[1MB AntiFire] Permission: " + ADMIN_PERMISSION + " (console is always allowed)");
-        sender.sendMessage("[1MB AntiFire] Keys: " + AntiFireSetting.availableKeys());
+        AntiFireMessageStyle.header(sender, "Help");
+        AntiFireMessageStyle.note(sender, "Trusted live controls for AntiFire protection settings.");
+        AntiFireMessageStyle.itemStrong(sender, "/_antifire");
+        AntiFireMessageStyle.detail(sender, "does", "Show this help summary.");
+        AntiFireMessageStyle.itemStrong(sender, "/_antifire help");
+        AntiFireMessageStyle.detail(sender, "does", "Show this help summary.");
+        AntiFireMessageStyle.itemStrong(sender, "/_antifire debug");
+        AntiFireMessageStyle.detail(sender, "does", "Show build metadata, active protection toggles, and permanent-fire exceptions.");
+        AntiFireMessageStyle.detail(sender, "permission", ADMIN_PERMISSION);
+        AntiFireMessageStyle.itemStrong(sender, "/_antifire reload");
+        AntiFireMessageStyle.detail(sender, "does", "Reload config.yml from disk and apply it immediately.");
+        AntiFireMessageStyle.itemStrong(sender, "/_antifire toggle <key> <value>");
+        AntiFireMessageStyle.detail(sender, "does", "Update one config key in-game and save it immediately.");
+        AntiFireMessageStyle.detail(sender, "values", "Use true/false for toggles and whole numbers for tick settings.");
+        AntiFireMessageStyle.detail(sender, "console", "always allowed");
+        sendKeyHelp(sender);
     }
 
     private List<String> filterMatches(String token, List<String> options) {
@@ -193,5 +195,21 @@ final class AntiFireAdminCommand implements BasicCommand {
             return formatToggle(booleanValue);
         }
         return String.valueOf(value);
+    }
+
+    private void sendValueDetail(CommandSender sender, String label, Object value) {
+        if (value instanceof Boolean booleanValue) {
+            AntiFireMessageStyle.state(sender, label, booleanValue);
+            return;
+        }
+        AntiFireMessageStyle.detail(sender, label, value);
+    }
+
+    private void sendKeyHelp(CommandSender sender) {
+        AntiFireMessageStyle.itemStrong(sender, "Toggle keys");
+        for (AntiFireSetting setting : AntiFireSetting.values()) {
+            AntiFireMessageStyle.detail(sender, setting.path(), setting.shortDescription());
+        }
+        AntiFireMessageStyle.detail(sender, "example", "/_antifire toggle allow-permanent-soul-fire true");
     }
 }
